@@ -16,13 +16,31 @@ class ChatHub {
         return this.connection.stop();
     }
 
-    sendMessage = async(user, message) => {
-        const data = await this.connection.invoke("SendMessage", user, message);
+    sendMessage = async(id, user, message) => {
+        const data = await this.connection.invoke("SendMessage", id, user, message);
         return data;
     }
 
     onMessageReceived(callBacksObject) {
         this.connection.on("ReceiveMessage", callBacksObject.messageReceived);
+    }
+
+    deleteMessage = async(id) => {
+        const data = await this.connection.invoke("DeleteMessage", id);
+        return data;
+    }
+
+    onMessageDeleted(callBacksObject) {
+        this.connection.on("MessageDeleted", callBacksObject.messageDeleted);
+    }
+
+    updateMessage = async(id, message) => {
+        const data = await this.connection.invoke("UpdateMessage", id, message);
+        return data;
+    }
+
+    onMessageUpdated(callBacksObject) {
+        this.connection.on("MessageUpdated", callBacksObject.messageUpdated);
     }
 }
 
