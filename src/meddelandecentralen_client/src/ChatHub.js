@@ -16,8 +16,8 @@ class ChatHub {
         return this.connection.stop();
     }
 
-    sendMessage = async(id, user, message) => {
-        const data = await this.connection.invoke("SendMessage", id, user, message);
+    sendMessage = async(id, user, message, room) => {
+        const data = await this.connection.invoke("SendMessage", id, user, message, room);
         return data;
     }
 

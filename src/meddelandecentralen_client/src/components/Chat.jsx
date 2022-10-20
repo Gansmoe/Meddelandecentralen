@@ -10,9 +10,12 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       rooms: [],
+      newRoom: "",
+      room: "",
       id: uuid(),
       name: "",
       message: "",
+      showAddRoom: false,
     }
   };
 
@@ -29,8 +32,15 @@ export default class Chat extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ id: uuid() });
-    ChatHub.sendMessage(this.state.id, this.state.name, this.state.message);
+    ChatHub.sendMessage(this.state.id, this.state.name, this.state.message, this.state.room);
     this.setState({ message: "" });
+  };
+
+  handleRoomSubmit = (event) => {
+    event.preventDefault();
+    this.setState({ rooms: [...this.state.rooms, this.state.newRoom] });
+    this.setState({ newRoom: "" });
+    this.setState({ showAddRoom: false });
   };
 
   handleChangeName = (event) => {
@@ -42,8 +52,11 @@ export default class Chat extends React.Component {
   };
 
   callBacksObject = {
-    messageReceived: (id, user, message) => {
-      this.setState({ messages: [...this.state.messages, { id, user, message }] });
+    messageReceived: (id, user, message, room) => {
+      this.setState({ messages: [...this.state.messages, { id, user, message, room }] });
+      if (!this.state.rooms.includes(room)) {
+        this.setState({ rooms: [...this.state.rooms, room] });
+      }
     },
     messageDeleted: (id) => {
       this.setState({ messages: this.state.messages.filter(message => message.id !== id) });
@@ -64,28 +77,41 @@ export default class Chat extends React.Component {
 
   render() {
     console.log(this.state.messages);
+    console.log(this.state.rooms);
+    console.log(this.state.newRoom);
     return (
       <div className="App">
         <h1>Hotell-Twitter</h1>
         <div className="chatContainer">
           <form onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Användarnamn" value={this.state.name} onChange={this.handleChangeName}></input>
-            <input type="textarea" placeholder="Meddelande" value={this.state.message} onChange={this.handleChangeMessage}></input>
-            <select placeholder="Välj rum">
-              <option value="1">Rum 1</option>
-              <option value="2">Rum 2</option>
-              <option value="3">Rum 3</option>
+            <input className="NameInput" type="text" placeholder="Användarnamn" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })}></input>
+            <textarea className="MsgInput" placeholder="Meddelande" value={this.state.message} onChange={(event) => this.setState({ message: event.target.value })}></textarea>
+            <select onChange={(event) => this.setState({ room: event.target.value })}>
+              <option value="">Välj rum</option>
+              {this.state.rooms.map(room => <option value={room}>{room}</option>)}
             </select>
             <input type="submit" value="Skicka" />
           </form>
+          {!this.state.showAddRoom ?
+            <div className="addRoomBtnContainer">
+              <button className="CreateRoomBtn" onClick={() => this.setState({ showAddRoom: !this.state.showAddRoom })}>Skapa rum</button>
+            </div>
+            : null
+          }
+          {this.state.showAddRoom ?
+            <div className="addRoomContainer">
+              <input type="text" placeholder="Rum" value={this.state.newRoom} onChange={(event) => this.setState({ newRoom: event.target.value })}></input>
+              <button className="SubmitBtn" type="submit" onClick={this.handleRoomSubmit}>Lägg till</button>
+            </div>
+            : null}
         </div>
         <div>
-            {(this.state.messages == null
-            ? 
-            <></> 
-            : 
-            <SearchBar list={this.state.messages} filterprop={'user'} customkey={this.state.messages.length + 1} Comp={Message} placeholder={'Filter messages about room...'} customProp={this.callBacksObject} />)}
-            </div>
+          {(this.state.messages == null
+            ?
+            <></>
+            :
+            <SearchBar list={this.state.messages} filterprop={'room'} customkey={this.state.messages.length + 1} Comp={Message} placeholder={'Filter messages about room...'} customProp={this.callBacksObject} />)}
+        </div>
       </div>
     )
   }
