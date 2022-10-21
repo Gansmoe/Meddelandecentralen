@@ -90,7 +90,7 @@ export default class Chat extends React.Component {
               <option value="">Välj rum</option>
               {this.state.rooms.map(room => <option value={room}>{room}</option>)}
             </select>
-            <input type="submit" value="Skicka" />
+            <input className="SendBtn" type="submit" value="Skicka" />
           </form>
           {!this.state.showAddRoom ?
             <div className="addRoomBtnContainer">
@@ -100,7 +100,7 @@ export default class Chat extends React.Component {
           }
           {this.state.showAddRoom ?
             <div className="addRoomContainer">
-              <input type="text" placeholder="Rum" value={this.state.newRoom} onChange={(event) => this.setState({ newRoom: event.target.value })}></input>
+              <input className="AddRoomInput" type="text" placeholder="Rum" value={this.state.newRoom} onChange={(event) => this.setState({ newRoom: event.target.value })}></input>
               <button className="SubmitBtn" type="submit" onClick={this.handleRoomSubmit}>Lägg till</button>
             </div>
             : null}
