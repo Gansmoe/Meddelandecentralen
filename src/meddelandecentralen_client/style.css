@@ -200,3 +200,9 @@ select:focus, select:active {
     border-radius: 5px;
     padding: 5px;
 }
+
+.commentContainer {
+    border: 2px solid #2F7694;
+    margin: 0.5em;
+    padding: 0.5em;
+}

@@ -16,8 +16,8 @@ class ChatHub {
         return this.connection.stop();
     }
 
-    sendMessage = async(id, user, message, room) => {
-        const data = await this.connection.invoke("SendMessage", id, user, message, room);
+    sendMessage = async(id, user, message, room, comments) => {
+        const data = await this.connection.invoke("SendMessage", id, user, message, room, comments);
         return data;
     }
 
@@ -42,6 +42,16 @@ class ChatHub {
     onMessageUpdated(callBacksObject) {
         this.connection.on("MessageUpdated", callBacksObject.messageUpdated);
     }
+
+    addComment = async(id, comment) => {
+        const data = await this.connection.invoke("AddComment", id, comment);
+        return data;
+    }
+
+    onCommentAdded(callBacksObject) {
+        this.connection.on("CommentAdded", callBacksObject.commentAdded);
+    }
+
 }
 
 export default new ChatHub();

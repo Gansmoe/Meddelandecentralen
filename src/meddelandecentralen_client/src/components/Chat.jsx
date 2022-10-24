@@ -10,6 +10,7 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       rooms: [],
+      comments : [],
       newRoom: "",
       room: "",
       id: uuid(),
@@ -25,14 +26,13 @@ export default class Chat extends React.Component {
     ChatHub.onMessageReceived(this.callBacksObject);
     ChatHub.onMessageDeleted(this.callBacksObject);
     ChatHub.onMessageUpdated(this.callBacksObject);
+    ChatHub.onCommentAdded(this.callBacksObject);
   }
-
-
 
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ id: uuid() });
-    ChatHub.sendMessage(this.state.id, this.state.name, this.state.message, this.state.room);
+    ChatHub.sendMessage(this.state.id, this.state.name, this.state.message, this.state.room, this.state.comments);
     this.setState({ message: "" });
   };
 
@@ -52,8 +52,8 @@ export default class Chat extends React.Component {
   };
 
   callBacksObject = {
-    messageReceived: (id, user, message, room) => {
-      this.setState({ messages: [...this.state.messages, { id, user, message, room }] });
+    messageReceived: (id, user, message, room, comments) => {
+      this.setState({ messages: [...this.state.messages, { id, user, message, room, comments }] });
       if (!this.state.rooms.includes(room)) {
         this.setState({ rooms: [...this.state.rooms, room] });
       }
@@ -69,6 +69,13 @@ export default class Chat extends React.Component {
     },
     updateMessage: (id, message) => {
       ChatHub.updateMessage(id, message);
+    },
+    addComment: (id, comment) => {
+      ChatHub.addComment(id, comment);
+      console.log(comment);
+    },
+    commentAdded: (id, comment) => {
+      this.setState({ messages: this.state.messages.map(message => message.id === id ? { ...message, comments: [...message.comments, comment] } : message) }, () => console.log(this.state.messages));
     }
   }
 
@@ -77,8 +84,6 @@ export default class Chat extends React.Component {
 
   render() {
     console.log(this.state.messages);
-    console.log(this.state.rooms);
-    console.log(this.state.newRoom);
     return (
       <div className="App">
         <h1>Hotell-Twitter</h1>

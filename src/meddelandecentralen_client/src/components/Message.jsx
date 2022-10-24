@@ -1,4 +1,5 @@
 import React from "react";
+import Comment from "./Comment";
 
 export default class Message extends React.Component {
     constructor(props) {
@@ -7,11 +8,21 @@ export default class Message extends React.Component {
             time: new Date().toLocaleTimeString(),
             date: new Date().toLocaleDateString(),
             showUpdate: false,
-            message: ""
+            message: "",
+            comment: ""
         }
     }
 
+
+    handleCommentSubmit = (event) => {
+        event.preventDefault();
+        this.props.customProp.addComment(this.props.message.id, this.state.comment);
+        console.log(this.props.message.comments);
+        this.setState({ comment: "" });
+    };
+
     render() {
+        console.log(this.state.comment);
         return (
             <div className="messageContainer">
                 <div className="message">
@@ -24,11 +35,28 @@ export default class Message extends React.Component {
                     {this.state.showUpdate ?
                         <div className="updateContainer">
                             <input className="updateInput" type="text" onChange={(event) => this.setState({ message: event.target.value })} />
-                            <button className="updateButton" onClick={() => { this.props.customProp.updateMessage(this.props.message.id, this.state.message), this.setState({ showUpdate: false }) }}>Update</button>
+                            <button className="updateButton" onClick={() => { this.props.customProp.updateMessage(this.props.message.id, this.state.message), this.setState({ showUpdate: false }) }}>Uppdatera meddelande</button>
                         </div>
                         : <button className="updateButton" onClick={() => this.setState({ showUpdate: !this.state.showUpdate })}>Ändra meddelande</button>}
                 </div>
+
+                <div className="commentContainer">
+                    <div className="comments">
+                        <h3>Kommentarer</h3>
+                        {this.props.message.comments = null ?
+                            <p>Inga kommentarer</p>
+                            :
+                            this.props.message.comments.map((comment) => <Comment key={comment.id} user={this.props.message.user} comment={comment} />)
+                        }
+                    </div>
+                </div>
+                <form onSubmit={this.handleCommentSubmit}>
+                        <div className="addComment">
+                            <input className="commentInput" placeholder="Skriv kommentar..." type="text" value={this.state.comment} onChange={(event) => this.setState({ comment: event.target.value })} />
+                            <input className="commentButton" type="submit" value="Lägg till kommentar" />
+                        </div>
+                    </form>
             </div>
-        );
+        )
     }
 }
