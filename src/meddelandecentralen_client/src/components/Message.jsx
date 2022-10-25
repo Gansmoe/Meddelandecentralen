@@ -9,7 +9,7 @@ export default class Message extends React.Component {
             date: new Date().toLocaleDateString(),
             showUpdate: false,
             message: "",
-            comment: ""
+            comment: "",
         }
     }
 
@@ -43,10 +43,10 @@ export default class Message extends React.Component {
                 <div className="commentContainer">
                     <div className="comments">
                         <h3>Kommentarer</h3>
-                        {this.props.message.comments = null ?
+                        {this.props.message.comments.length < 1 ?
                             <p>Inga kommentarer</p>
                             :
-                            this.props.message.comments.map((comment) => <Comment key={comment.id} user={this.props.message.user} comment={comment} />)
+                            this.props.message.comments.map((comment) => <Comment key={comment.id} user={comment.name} comment={comment.comment} />)
                         }
                     </div>
                 </div>

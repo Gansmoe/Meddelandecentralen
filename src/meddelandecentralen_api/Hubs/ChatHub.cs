@@ -21,9 +21,9 @@ namespace SignalRChat.Hubs
             await Clients.All.SendAsync("MessageUpdated", id, message);
         }
 
-        public async Task AddComment(string id, string comment)
+        public async Task AddComment(string id, string comment, string name)
         {
-            await Clients.All.SendAsync("CommentAdded", id, comment);
+            await Clients.All.SendAsync("CommentAdded", id, comment, name);
         }
     }
 }

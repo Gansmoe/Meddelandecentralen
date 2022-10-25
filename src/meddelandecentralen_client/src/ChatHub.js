@@ -5,17 +5,25 @@ class ChatHub {
     constructor() {
         this.connection = new SignalR.HubConnectionBuilder()
             .withUrl("https://localhost:6001/chathub")
+            .withAutomaticReconnect([5000, 10000, 15000, 20000, 25000, 30000])
             .build();
     }
 
-    start() {
-        return this.connection.start();
+    async start(callBacksObject) {
+        console.log("Starting connection");
+        
+        try {
+            return await this.connection.start();
+        } catch (err) {
+            console.log(err);
+            await callBacksObject.hadError();
+        }
     }
 
     stop() {
         return this.connection.stop();
     }
-
+    
     sendMessage = async(id, user, message, room, comments) => {
         const data = await this.connection.invoke("SendMessage", id, user, message, room, comments);
         return data;
@@ -43,8 +51,8 @@ class ChatHub {
         this.connection.on("MessageUpdated", callBacksObject.messageUpdated);
     }
 
-    addComment = async(id, comment) => {
-        const data = await this.connection.invoke("AddComment", id, comment);
+    addComment = async(id, comment, name) => {
+        const data = await this.connection.invoke("AddComment", id, comment, name);
         return data;
     }
 

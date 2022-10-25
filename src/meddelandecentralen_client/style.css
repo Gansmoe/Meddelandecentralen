@@ -3,19 +3,20 @@
 
 body {
     font-family: 'Cormorant Garamond', serif;
-    background-color: #C0E9FA;
+    background-color: #c4f8ff;
     height: 100%;
 }
 
 .App {
     font-family: 'Cormorant Garamond', serif;
     background-color: #ffffff;
+    border-left: 2px solid rgb(239, 243, 244);
+    border-right: 2px solid rgb(239, 243, 244);
     display: flex;
     flex-direction: column;
-    width: 75%;
+    width: 20em;
     margin: auto;
     padding: 5%;
-    border-radius: 4px;
     min-height: 100vh;
 }
 
@@ -43,7 +44,7 @@ body {
 .search-bar-items {
     display: flex;
     max-width: 200px;
-    margin-right: 2em;
+    margin-right: 4.4em;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
@@ -137,6 +138,7 @@ body {
 
 .SendBtn:hover, .CreateRoomBtn:hover {
     background-color: #fff;
+    transition: 0.2s;
 }
 
 .SendBtn:active, .CreateRoomBtn:active {
@@ -187,6 +189,7 @@ select:focus, select:active {
 
 .SubmitBtn:hover {
     background-color: #fff;
+    transition: 0.2s;
 }
 
 .AddRoomInput {
@@ -203,6 +206,154 @@ select:focus, select:active {
 
 .commentContainer {
     border: 2px solid #2F7694;
+    border-radius: 10px;
     margin: 0.5em;
     padding: 0.5em;
+    width: 85%;
+}
+
+
+
+.deleteButton {
+    background-color: #fbeee0;
+    border: 2px solid #422800;
+    border-radius: 30px;
+    box-shadow: #422800 4px 4px 0 0;
+    color: #422800;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 10px;
+    margin: 5px;
+    line-height: 35px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.deleteButton:hover {
+    background-color: #fff;
+    transition: 0.2s;
+}
+
+.updateButton {
+    background-color: #fbeee0;
+    border: 2px solid #422800;
+    border-radius: 30px;
+    box-shadow: #422800 4px 4px 0 0;
+    color: #422800;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 10px;
+    margin: 5px;
+    line-height: 35px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.updateButton:hover {
+    background-color: #fff;
+    transition: 0.2s;
+}
+
+.updateInput {
+    background-color: #fbeee0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.updateInput:hover {
+    background-color: #CDD5FA;
+    transition: 0.2s;
+}
+
+.commentInput {
+    background-color: #fbeee0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.commentInput:hover {
+    background-color: #CDD5FA;
+    transition: 0.2s;
+}
+
+.commentButton {
+    background-color: #fbeee0;
+    border: 2px solid #422800;
+    border-radius: 30px;
+    box-shadow: #422800 4px 4px 0 0;
+    color: #422800;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 10px;
+    margin: 5px;
+    line-height: 35px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.commentButton:hover {
+    background-color: #fff;
+    transition: 0.2s;
+}
+
+.speech-bubble {
+	position: relative;
+    min-height: 2em;
+	background: #00aabb;
+	border-radius: .4em;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.969em solid transparent;
+	border-right-color: #00aabb;
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -0.484em;
+	margin-left: -0.969em;
+}
+
+.content {
+    padding-left: 3em;
+}
+
+.renderedComment {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #8db2c2;
+}
+
+
+@media screen and (max-width: 960px) {
+    .App {
+        width: 85%;
+    }
 }

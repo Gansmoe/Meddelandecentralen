@@ -10,23 +10,28 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
       rooms: [],
-      comments : [],
+      comments: [],
       newRoom: "",
       room: "",
       id: uuid(),
       name: "",
       message: "",
       showAddRoom: false,
+      error: false
     }
   };
 
 
   componentDidMount() {
-    ChatHub.start();
+    ChatHub.start(this.callBacksObject);
     ChatHub.onMessageReceived(this.callBacksObject);
     ChatHub.onMessageDeleted(this.callBacksObject);
     ChatHub.onMessageUpdated(this.callBacksObject);
     ChatHub.onCommentAdded(this.callBacksObject);
+  }
+
+  componentWillUnmount() {
+    ChatHub.stop();
   }
 
   handleSubmit = (event) => {
@@ -71,11 +76,13 @@ export default class Chat extends React.Component {
       ChatHub.updateMessage(id, message);
     },
     addComment: (id, comment) => {
-      ChatHub.addComment(id, comment);
-      console.log(comment);
+      ChatHub.addComment(id, comment, this.state.name)
     },
-    commentAdded: (id, comment) => {
-      this.setState({ messages: this.state.messages.map(message => message.id === id ? { ...message, comments: [...message.comments, comment] } : message) }, () => console.log(this.state.messages));
+    commentAdded: (id, comment, name) => {
+      this.setState({ messages: this.state.messages.map(message => message.id === id ? { ...message, comments: [...message.comments, { comment, name }] } : message) }, () => console.log(this.state.messages));
+    },
+    hadError: () => {
+      this.setState({ error: true });
     }
   }
 
@@ -84,38 +91,48 @@ export default class Chat extends React.Component {
 
   render() {
     console.log(this.state.messages);
+    console.log(this.state.error);
     return (
       <div className="App">
-        <h1>Hotell-Twitter</h1>
-        <div className="chatContainer">
-          <form onSubmit={this.handleSubmit}>
-            <input className="NameInput" type="text" placeholder="Användarnamn" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })}></input>
-            <textarea className="MsgInput" placeholder="Meddelande" value={this.state.message} onChange={(event) => this.setState({ message: event.target.value })}></textarea>
-            <select onChange={(event) => this.setState({ room: event.target.value })}>
-              <option value="">Välj rum</option>
-              {this.state.rooms.map(room => <option value={room}>{room}</option>)}
-            </select>
-            <input className="SendBtn" type="submit" value="Skicka" />
-          </form>
-          {!this.state.showAddRoom ?
-            <div className="addRoomBtnContainer">
-              <button className="CreateRoomBtn" onClick={() => this.setState({ showAddRoom: !this.state.showAddRoom })}>Skapa rum</button>
-            </div>
-            : null
-          }
-          {this.state.showAddRoom ?
-            <div className="addRoomContainer">
-              <input className="AddRoomInput" type="text" placeholder="Rum" value={this.state.newRoom} onChange={(event) => this.setState({ newRoom: event.target.value })}></input>
-              <button className="SubmitBtn" type="submit" onClick={this.handleRoomSubmit}>Lägg till</button>
-            </div>
-            : null}
-        </div>
+        <h1>Mercer-Twitter</h1>
         <div>
-          {(this.state.messages == null
+          {(this.state.error
             ?
-            <></>
+            <p>Something went wrong with the connection</p>
             :
-            <SearchBar list={this.state.messages} filterprop={'room'} customkey={this.state.messages.length + 1} Comp={Message} placeholder={'Filter messages about room...'} customProp={this.callBacksObject} />)}
+            <>
+              <div className="chatContainer">
+                <form onSubmit={this.handleSubmit}>
+                  <input className="NameInput" type="text" placeholder="Användarnamn" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })}></input>
+                  <textarea className="MsgInput" placeholder="Meddelande" value={this.state.message} onChange={(event) => this.setState({ message: event.target.value })}></textarea>
+                  <select onChange={(event) => this.setState({ room: event.target.value })}>
+                    <option value="">Välj rum</option>
+                    {this.state.rooms.map(room => <option value={room}>{room}</option>)}
+                  </select>
+                  <input className="SendBtn" type="submit" value="Skicka" />
+                </form>
+                {!this.state.showAddRoom ?
+                  <div className="addRoomBtnContainer">
+                    <button className="CreateRoomBtn" onClick={() => this.setState({ showAddRoom: !this.state.showAddRoom })}>Skapa rum</button>
+                  </div>
+                  : null
+                }
+                {this.state.showAddRoom ?
+                  <div className="addRoomContainer">
+                    <input className="AddRoomInput" type="text" placeholder="Rum" value={this.state.newRoom} onChange={(event) => this.setState({ newRoom: event.target.value })}></input>
+                    <button className="SubmitBtn" type="submit" onClick={this.handleRoomSubmit}>Lägg till</button>
+                  </div>
+                  : null}
+              </div>
+              <div>
+                {(this.state.messages == null
+                  ?
+                  <></>
+                  :
+                  <SearchBar list={this.state.messages} name={this.state.name} filterprop={'room'} customkey={this.state.messages.length + 1} Comp={Message} placeholder={'Filter messages about room...'} customProp={this.callBacksObject} />)}
+              </div>
+            </>
+          )}
         </div>
       </div>
     )

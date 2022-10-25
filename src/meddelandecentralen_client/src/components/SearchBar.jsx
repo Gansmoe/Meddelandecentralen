@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
  * @returns JSX.Element
  */
 
-const SearchBar = ({ list, placeholder, Comp, filterprop, customkey, customProp }) => {
+const SearchBar = ({ list, placeholder, Comp, filterprop, customkey, customProp, name }) => {
     const [items, setItems] = useState(list);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -32,15 +32,17 @@ const SearchBar = ({ list, placeholder, Comp, filterprop, customkey, customProp 
             <div className="search-bar-items">
                 {items.filter((entry) => {
                     if (searchTerm === '') {
+                        console.log(entry);
                         return entry;
                     } else if (entry[filterprop].toLowerCase().includes(searchTerm.toLocaleLowerCase())) {
+                        console.log(entry);
                         return entry;
                     } else return null;
                 })
                     .map((entry, key) => {
                         return (
                             <div className='anim-fade' key={entry[customkey] ? entry[customkey] : key}>
-                                <Comp message={entry} listitem={entry} customProp={customProp} />  {/* "room" is hard coded due to rooms.jsx component requiring it to be called that. Use listitem instead please. */}
+                                <Comp message={entry} name={name} listitem={entry} customProp={customProp} />
                             </div>
                         );
                     })}
